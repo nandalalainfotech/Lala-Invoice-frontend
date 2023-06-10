@@ -128,22 +128,22 @@ function InvoiceScree() {
   const [Termscon, setTermscon] = useState("");
   const [subTotal, setSubTotal] = useState("subTotal");
   const [Discount, setDiscount] = useState("Discount");
-  const [Disvalue, setDisvalue] = useState("");
+  const [Disvalue, setDisvalue] = useState(null);
   const [Tax, setTax] = useState("Tax");
-  const [Taxvalue, setTaxvalue] = useState("");
+  const [Taxvalue, setTaxvalue] = useState(null);
   const [Shipping, setShipping] = useState("Shipping");
-  const [Shippingvalue, setShippingvalue] = useState("");
+  const [Shippingvalue, setShippingvalue] = useState(null);
   const [Total, setTotal] = useState("Total");
   const [Amountpaid, setAmountpaid] = useState("Amount Paid");
-  const [Paidvalue, setPaidvalue] = useState("");
+  const [Paidvalue, setPaidvalue] = useState(null);
   const [Balencedue, setBalencedue] = useState("Balance Due");
   const [TableInvoice, setTableInvoice] = useState("Invoice");
   const [Tableqty, setTableqty] = useState("Quanty");
   const [TableRating, setTableRating] = useState("Rating");
   const [TableAmount, setTableAmount] = useState("Amount");
-  const [Subvalue, setSubvalue] = useState("");
-  const [duevalue, setBalenceduevalue] = useState("");
-  const [Totalvalue, setTotalvalue] = useState("");
+  const [Subvalue, setSubvalue] = useState(10000);
+  const [duevalue, setBalenceduevalue] = useState(null);
+  const [Totalvalue, setTotalvalue] = useState(null);
 
   const [imageFile, setimageFile] = useState("");
   const [border, setBorder] = useState(0);
@@ -154,8 +154,6 @@ function InvoiceScree() {
   const [border5, setBorder5] = useState(0);
   const [border6, setBorder6] = useState(0);
   const [img, setimg] = useState("");
-
-  console.log("border------------->", border);
 
   const [errorUpload, setErrorUpload] = useState("");
   const submitHandler = async (data) => {
@@ -245,7 +243,6 @@ function InvoiceScree() {
 
   const onLoad = (fileString) => {
     setimageFile(fileString);
-    console.log(fileString);
   };
 
   const getBase64 = (file) => {
@@ -256,6 +253,63 @@ function InvoiceScree() {
     };
   };
 
+  const handleDiscountValue = (e) => {
+    let tax = 0;
+    if (Taxvalue) {
+      tax = (Taxvalue / 100) * Subvalue;
+    }
+    let calculate = Subvalue - e.target.value + tax + Shippingvalue
+    setTotalvalue(calculate)
+    setDisvalue(e.target.value)
+    if (Paidvalue) {
+      // console.log("calculate,Paidvalue", calculate, Paidvalue)
+      let bal = calculate - Paidvalue
+      setBalenceduevalue(bal)
+    }
+  }
+
+  const handleTaxValue = (e) => {
+    let tax = (e.target.value / 100) * Subvalue;
+    let calculate = Subvalue - Disvalue + tax + Shippingvalue
+    setTotalvalue(calculate)
+    setTaxvalue(e.target.value)
+    if (Paidvalue) {
+      let bal = calculate - Paidvalue
+      setBalenceduevalue(bal)
+    }
+  }
+
+  const handleShipping = (e) => {
+    let tax = 0;
+    if (Taxvalue) {
+      tax = (Taxvalue / 100) * Subvalue;
+    }
+    let calculate = Subvalue - Disvalue + tax + parseInt(e.target.value ? e.target.value : 0)
+    setTotalvalue(calculate)
+    setShippingvalue(e.target.value ? e.target.value : 0)
+    if (Paidvalue) {
+      let bal = calculate - Paidvalue
+      setBalenceduevalue(bal)
+    }
+  }
+
+  const HandlePaidvalue = (e) => {
+
+    let tax = 0;
+    if (Taxvalue) {
+      tax = (Taxvalue / 100) * Subvalue;
+    }
+    let totalAmt = Subvalue - Disvalue + tax + parseInt(Shippingvalue)
+    if (e.target.value && e.target.value <= totalAmt) {
+      let dueAmt = totalAmt - parseInt(e.target.value ? e.target.value : 0)
+      setPaidvalue(parseInt(e.target.value ? e.target.value : 0))
+      setBalenceduevalue(dueAmt)
+    } else {
+      setPaidvalue(0)
+      setBalenceduevalue(totalAmt)
+    }
+
+  }
   useEffect(() => {
     // dispatch(InvoiceListDetails());
     // const fetct = async () => {
@@ -263,8 +317,7 @@ function InvoiceScree() {
     //     console.log(data);
     // }
     // fetct()
-  }),
-    [];
+  }, [])
 
   return (
     <Box
@@ -278,7 +331,7 @@ function InvoiceScree() {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box sx={{ maxWidth: 300, ml: 1 }}>
-                <Card variant="outlined">
+                  <Card variant="outlined">
                     <CardContent>
                       <Grid container justify="center" alignItems="center">
                         <input
@@ -306,8 +359,8 @@ function InvoiceScree() {
                             </label>
 
                             {img ? (<>
-                              <ClearIcon onClick={(e) =>  setimg()}/>
-                              <img width="100" height="100" alt="preview image" src={img}/>
+                              <ClearIcon onClick={(e) => setimg()} />
+                              <img width="100" height="100" alt="preview image" src={img} />
                             </>) : (<></>)}
                           </>
                         )}
@@ -424,79 +477,75 @@ function InvoiceScree() {
               <Grid item xs={6}>
                 <CacheProvider value={cacheRtl}>
                   <ThemeProvider theme={theme}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          "& .MuiTextField-root": { m: 1, width: "55ch" },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 53,
-                              padding: "0 14px",
-                              fontSize: 30,
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          onChange={(e) => setInvoice(e.target.value)}
-                          defaultValue="Invoice"
-                          size="small"
-                        />
-                      </Box>
-                      <Box
-                        component="form"
-                        sx={{
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
+                    <Box
+                      component="form"
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "55ch" },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        InputProps={{
+                          style: {
+                            height: 53,
+                            padding: "0 14px",
+                            fontSize: 30,
                           },
                         }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                #
-                              </InputAdornment>
-                            ),
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Invoice"
-                          size="small"
-                          onChange={(e) => setInvoicesmal(e.target.value)}
-                        />
-                      </Box>
-                    </div>
+                        id="outlined-size-normal"
+                        onChange={(e) => setInvoice(e.target.value)}
+                        defaultValue="Invoice"
+                        size="small"
+                      />
+                    </Box>
+                    <Box
+                      component="form"
+                      sx={{
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              #
+                            </InputAdornment>
+                          ),
+                        }}
+                        id="outlined-size-normal"
+                        defaultValue="Invoice"
+                        size="small"
+                        onChange={(e) => setInvoicesmal(e.target.value)}
+                      />
+                    </Box>
                     <Box>
                       <Box sx={{ display: "flex" }}>
-                        <div dir="rtl">
-                          <Box
-                            component="form"
-                            sx={{
-                              "& .MuiTextField-root": {
-                                m: 1,
-                                width: "25ch",
-                                height: "5ch",
-                              },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="outlined-size-normal"
-                              defaultValue="Date"
-                              onChange={(e) => setDate(e.target.value)}
-                              size="small"
-                            />
-                          </Box>
-                        </div>
+                        <Box
+                          component="form"
+                          sx={{
+                            "& .MuiTextField-root": {
+                              m: 1,
+                              width: "25ch",
+                              height: "5ch",
+                            },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField
+                            id="outlined-size-normal"
+                            defaultValue="Date"
+                            onChange={(e) => setDate(e.target.value)}
+                            size="small"
+                          />
+                        </Box>
                         <Box
                           sx={{
                             "& .MuiTextField-root": { m: 1, width: "15ch" },
@@ -521,27 +570,25 @@ function InvoiceScree() {
                         </Box>
                       </Box>
                       <Box sx={{ display: "flex" }}>
-                        <div dir="rtl">
-                          <Box
-                            component="form"
-                            sx={{
-                              "& .MuiTextField-root": {
-                                m: 1,
-                                width: "25ch",
-                                height: "5ch",
-                              },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="outlined-size-normal"
-                              defaultValue="Payment Terms"
-                              size="small"
-                              onChange={(e) => setPayment(e.target.value)}
-                            />
-                          </Box>
-                        </div>
+                        <Box
+                          component="form"
+                          sx={{
+                            "& .MuiTextField-root": {
+                              m: 1,
+                              width: "25ch",
+                              height: "5ch",
+                            },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField
+                            id="outlined-size-normal"
+                            defaultValue="Payment Terms"
+                            size="small"
+                            onChange={(e) => setPayment(e.target.value)}
+                          />
+                        </Box>
                         <Box
                           sx={{
                             "& .MuiTextField-root": { m: 1, width: "15ch" },
@@ -557,27 +604,25 @@ function InvoiceScree() {
                         </Box>
                       </Box>
                       <Box sx={{ display: "flex" }}>
-                        <div dir="rtl">
-                          <Box
-                            component="form"
-                            sx={{
-                              "& .MuiTextField-root": {
-                                m: 1,
-                                width: "25ch",
-                                height: "5ch",
-                              },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="outlined-size-normal"
-                              defaultValue="Due Date"
-                              size="small"
-                              onChange={(e) => setDuedate(e.target.value)}
-                            />
-                          </Box>
-                        </div>
+                        <Box
+                          component="form"
+                          sx={{
+                            "& .MuiTextField-root": {
+                              m: 1,
+                              width: "25ch",
+                              height: "5ch",
+                            },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField
+                            id="outlined-size-normal"
+                            defaultValue="Due Date"
+                            size="small"
+                            onChange={(e) => setDuedate(e.target.value)}
+                          />
+                        </Box>
                         <Box
                           sx={{
                             "& .MuiTextField-root": { m: 1, width: "15ch" },
@@ -594,27 +639,25 @@ function InvoiceScree() {
                         </Box>
                       </Box>
                       <Box sx={{ display: "flex" }}>
-                        <div dir="rtl">
-                          <Box
-                            component="form"
-                            sx={{
-                              "& .MuiTextField-root": {
-                                m: 1,
-                                width: "25ch",
-                                height: "5ch",
-                              },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="outlined-size-normal"
-                              defaultValue="PO Number"
-                              size="small"
-                              onChange={(e) => setPonumber(e.target.value)}
-                            />
-                          </Box>
-                        </div>
+                        <Box
+                          component="form"
+                          sx={{
+                            "& .MuiTextField-root": {
+                              m: 1,
+                              width: "25ch",
+                              height: "5ch",
+                            },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField
+                            id="outlined-size-normal"
+                            defaultValue="PO Number"
+                            size="small"
+                            onChange={(e) => setPonumber(e.target.value)}
+                          />
+                        </Box>
                         <Box
                           sx={{
                             "& .MuiTextField-root": { m: 1, width: "15ch" },
@@ -874,66 +917,64 @@ function InvoiceScree() {
                 </Grid>
                 <Grid item xs={6}>
                   <Box sx={{ display: "flex" }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border6 === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="subTotal"
-                              size="small"
-                              // onChange={(e) => setSubTotal(e.target.value)}
-                              onClick={(e) => {
-                                setBorder6(1);
-                                setSubTotal(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="subTotal"
-                              size="small"
-                              // onChange={(e) => setSubTotal(e.target.value)}
-                              onClick={(e) => {
-                                setBorder6(1);
-                                setSubTotal(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border6 === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="subTotal"
+                            size="small"
+                            // onChange={(e) => setSubTotal(e.target.value)}
+                            onClick={(e) => {
+                              setBorder6(1);
+                              setSubTotal(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="subTotal"
+                            size="small"
+                            // onChange={(e) => setSubTotal(e.target.value)}
+                            onClick={(e) => {
+                              setBorder6(1);
+                              setSubTotal(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
                     <Box
                       component="form"
                       sx={{
@@ -955,345 +996,336 @@ function InvoiceScree() {
                           },
                         }}
                         id="outlined-size-normal"
-                        defaultValue="0"
+                        defaultValue={null}
                         size="small"
+                        value={Subvalue}
                         onChange={(e) => setSubvalue(e.target.value)}
                       />
                     </Box>
                   </Box>
                   <Box sx={{ display: "flex" }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border5 === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Discount"
+                            size="small"
+                            // onChange={(e) => setDiscount(e.target.value)}
+                            onClick={(e) => {
+                              setBorder5(1);
+                              setDiscount(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Discount"
+                            size="small"
+                            // onChange={(e) => setDiscount(e.target.value)}
+                            onClick={(e) => {
+                              setBorder5(1);
+                              setDiscount(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "15ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        InputProps={{
+                          style: {
+                            height: 33,
+                            padding: "0 14px",
                           },
                         }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border5 === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Discount"
-                              size="small"
-                              // onChange={(e) => setDiscount(e.target.value)}
-                              onClick={(e) => {
-                                setBorder5(1);
-                                setDiscount(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Discount"
-                              size="small"
-                              // onChange={(e) => setDiscount(e.target.value)}
-                              onClick={(e) => {
-                                setBorder5(1);
-                                setDiscount(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "15ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="0"
-                          size="small"
-                          onChange={(e) => setDisvalue(e.target.value)}
-                        />
-                      </Box>
-                    </div>
+                        id="outlined-size-normal"
+                        defaultValue={null}
+                        size="small"
+                        value={Disvalue}
+                        // onChange={(e) => setDisvalue(e.target.value)}
+                        onChange={(e) => handleDiscountValue(e)}
+                      />
+                    </Box>
                   </Box>
                   <Box sx={{ display: "flex", mt: 0.3 }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border4 === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Tax (%)"
+                            size="small"
+                            // onChange={(e) => setTax(e.target.value)}
+                            onClick={(e) => {
+                              setBorder4(1);
+                              setTax(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Tax (%)"
+                            size="small"
+                            // onChange={(e) => setTax(e.target.value)}
+                            onClick={(e) => {
+                              setBorder4(1);
+                              setTax(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "15ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        InputProps={{
+                          style: {
+                            height: 33,
+                            padding: "0 14px",
                           },
                         }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border4 === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Tax"
-                              size="small"
-                              // onChange={(e) => setTax(e.target.value)}
-                              onClick={(e) => {
-                                setBorder4(1);
-                                setTax(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Tax"
-                              size="small"
-                              // onChange={(e) => setTax(e.target.value)}
-                              onClick={(e) => {
-                                setBorder4(1);
-                                setTax(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "15ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="0"
-                          size="small"
-                          onChange={(e) => setTaxvalue(e.target.value)}
-                        />
-                      </Box>
-                    </div>
+                        id="outlined-size-normal"
+                        defaultValue={null}
+                        value={Taxvalue}
+                        size="small"
+                        onChange={(e) => handleTaxValue(e)}
+                      />
+                    </Box>
                   </Box>
                   <Box sx={{ display: "flex", mt: 0.3 }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border3 === 0 ? (
+                        <>
+                          {" "}
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Shipping"
+                            size="small"
+                            // onChange={(e) => setShipping(e.target.value)}
+                            onClick={(e) => {
+                              setBorder3(1);
+                              setShipping(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Shipping"
+                            size="small"
+                            // onChange={(e) => setShipping(e.target.value)}
+                            onClick={(e) => {
+                              setBorder3(1);
+                              setShipping(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "15ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        InputProps={{
+                          style: {
+                            height: 33,
+                            padding: "0 14px",
                           },
                         }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border3 === 0 ? (
-                          <>
-                            {" "}
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Shipping"
-                              size="small"
-                              // onChange={(e) => setShipping(e.target.value)}
-                              onClick={(e) => {
-                                setBorder3(1);
-                                setShipping(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            {" "}
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Shipping"
-                              size="small"
-                              // onChange={(e) => setShipping(e.target.value)}
-                              onClick={(e) => {
-                                setBorder3(1);
-                                setShipping(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "15ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="0"
-                          size="small"
-                          onChange={(e) => setShippingvalue(e.target.value)}
-                        />
-                      </Box>
-                    </div>
+                        id="outlined-size-normal"
+                        defaultValue={null}
+                        value={Shippingvalue}
+                        size="small"
+                        onChange={(e) => handleShipping(e)}
+                      />
+                    </Box>
                   </Box>
                   <Box sx={{ display: "flex" }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border2 === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Total"
-                              size="small"
-                              // onChange={(e) => setTotal(e.target.value)}
-                              onClick={(e) => {
-                                setBorder2(1);
-                                setTotal(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Total"
-                              size="small"
-                              // onChange={(e) => setTotal(e.target.value)}
-                              onClick={(e) => {
-                                setBorder2(1);
-                                setTotal(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border2 === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Total"
+                            size="small"
+                            // onChange={(e) => setTotal(e.target.value)}
+                            onClick={(e) => {
+                              setBorder2(1);
+                              setTotal(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Total"
+                            size="small"
+                            // onChange={(e) => setTotal(e.target.value)}
+                            onClick={(e) => {
+                              setBorder2(1);
+                              setTotal(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
                     <Box
                       component="form"
                       sx={{
@@ -1317,71 +1349,71 @@ function InvoiceScree() {
                         id="outlined-size-normal"
                         defaultValue="$0.00"
                         size="small"
+                        disabled={true}
+                        value={Totalvalue}
                         onChange={(e) => setTotalvalue(e.target.value)}
                       />
                     </Box>
                   </Box>
                   <Box sx={{ display: "flex" }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border1 === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              inputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Amount Paid"
-                              size="small"
-                              // onChange={(e) => setAmountpaid(e.target.value)}
-                              onClick={(e) => {
-                                setBorder1(1);
-                                setAmountpaid(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              inputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Amount Paid"
-                              size="small"
-                              // onChange={(e) => setAmountpaid(e.target.value)}
-                              onClick={(e) => {
-                                setBorder1(1);
-                                setAmountpaid(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border1 === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            inputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Amount Paid"
+                            size="small"
+                            // onChange={(e) => setAmountpaid(e.target.value)}
+                            onClick={(e) => {
+                              setBorder1(1);
+                              setAmountpaid(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            inputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Amount Paid"
+                            size="small"
+                            // onChange={(e) => setAmountpaid(e.target.value)}
+                            onClick={(e) => {
+                              setBorder1(1);
+                              setAmountpaid(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
                     <Box
                       component="form"
                       sx={{
@@ -1403,73 +1435,72 @@ function InvoiceScree() {
                           },
                         }}
                         id="outlined-size-normal"
-                        defaultValue="0"
+                        defaultValue={null}
+                        value={Paidvalue}
                         size="small"
-                        onChange={(e) => setPaidvalue(e.target.value)}
+                        onChange={(e) => HandlePaidvalue(e)}
                       />
                     </Box>
                   </Box>
                   <Box sx={{ display: "flex" }}>
-                    <div dir="rtl">
-                      <Box
-                        component="form"
-                        sx={{
-                          ml: 3,
-                          "& .MuiTextField-root": {
-                            m: 1,
-                            width: "25ch",
-                            height: "5ch",
-                          },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        {border === 0 ? (
-                          <>
-                            <TextField
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                              }}
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Balance Due"
-                              size="small"
-                              // onChange={(e) => setBalencedue(e.target.value)}
-                              onClick={(e) => {
-                                setBorder(1);
-                                setBalencedue(e.target.value);
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <TextField
-                              InputProps={{
-                                style: {
-                                  height: 33,
-                                  padding: "0 14px",
-                                },
-                              }}
-                              id="outlined-size-normal"
-                              defaultValue="Balance Due"
-                              size="small"
-                              // onChange={(e) => setBalencedue(e.target.value)}
-                              onClick={(e) => {
-                                setBorder(1);
-                                setBalencedue(e.target.value);
-                              }}
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </div>
+                    <Box
+                      component="form"
+                      sx={{
+                        ml: 3,
+                        "& .MuiTextField-root": {
+                          m: 1,
+                          width: "25ch",
+                          height: "5ch",
+                        },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      {border === 0 ? (
+                        <>
+                          <TextField
+                            sx={{
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                border: "none",
+                              },
+                            }}
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Balance Due"
+                            size="small"
+                            // onChange={(e) => setBalencedue(e.target.value)}
+                            onClick={(e) => {
+                              setBorder(1);
+                              setBalencedue(e.target.value);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <TextField
+                            InputProps={{
+                              style: {
+                                height: 33,
+                                padding: "0 14px",
+                              },
+                            }}
+                            id="outlined-size-normal"
+                            defaultValue="Balance Due"
+                            size="small"
+                            // onChange={(e) => setBalencedue(e.target.value)}
+                            onClick={(e) => {
+                              setBorder(1);
+                              setBalencedue(e.target.value);
+                            }}
+                          />
+                        </>
+                      )}
+                    </Box>
                     <Box
                       component="form"
                       sx={{
@@ -1494,7 +1525,9 @@ function InvoiceScree() {
                         id="outlined-size-normal"
                         defaultValue="$0.00"
                         size="small"
-                        onChange={(e) => setBalenceduevalue(e.target.value)}
+                        disabled={true}
+                        value={duevalue}
+                      // onChange={(e) => setBalenceduevalue(e.target.value)}
                       />
                     </Box>
                   </Box>
