@@ -153,6 +153,7 @@ function InvoiceScree() {
   const [border4, setBorder4] = useState(0);
   const [border5, setBorder5] = useState(0);
   const [border6, setBorder6] = useState(0);
+  const [img, setimg] = useState("");
 
   console.log("border------------->", border);
 
@@ -239,6 +240,7 @@ function InvoiceScree() {
     const files = e.target.files;
     const file = files[0];
     getBase64(file);
+    setimg(URL.createObjectURL(file));
   };
 
   const onLoad = (fileString) => {
@@ -275,8 +277,8 @@ function InvoiceScree() {
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Box sx={{ maxWidth: 200, ml: 1 }}>
-                  <Card variant="outlined">
+                <Box sx={{ maxWidth: 300, ml: 1 }}>
+                <Card variant="outlined">
                     <CardContent>
                       <Grid container justify="center" alignItems="center">
                         <input
@@ -296,11 +298,18 @@ function InvoiceScree() {
                             src={state}
                           />
                         ) : (
-                          <label htmlFor="contained-button-file">
-                            <Fab component="span">
-                              <AddIcon />
-                            </Fab>
-                          </label>
+                          <>
+                            <label htmlFor="contained-button-file">
+                              <Fab component="span">
+                                <AddIcon />
+                              </Fab>
+                            </label>
+
+                            {img ? (<>
+                              <ClearIcon onClick={(e) =>  setimg()}/>
+                              <img width="100" height="100" alt="preview image" src={img}/>
+                            </>) : (<></>)}
+                          </>
                         )}
                       </Grid>
                     </CardContent>
