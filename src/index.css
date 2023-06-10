@@ -108,3 +108,17 @@
   margin-top: 52px;
 }
 
+body {
+  font-family: 'Times New Roman';
+}
+.footer {
+  background-color: #758283;
+  color: white;
+  position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+
+  bottom: 0;
+}
