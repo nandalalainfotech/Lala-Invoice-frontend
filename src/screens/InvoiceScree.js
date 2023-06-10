@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import DownloadIcon from "@mui/icons-material/Download";
-import Button from "@mui/material/Button";
+import { Button } from "@material-ui/core";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -36,6 +36,14 @@ const useStyle = makeStyles({
     justifyContent: "center",
     marginLeft: 60,
   },
+  Button: {
+    backgroundColor: "#336699",
+    color: "#fff",
+    "&:hover": {
+      background: "#336699",
+      color: "#fff",
+    },
+  },
 });
 
 const theme = createTheme({
@@ -53,7 +61,7 @@ const cacheRtl = createCache({
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
-    backgroundColor: "#E4E4E4",
+    backgroundColor: "#336699",
   },
   section: {
     margin: 10,
@@ -106,6 +114,7 @@ function InvoiceScree() {
   const [Payment, setPayment] = useState("Payment Terms");
   const [Paymentvalue, setPaymentvalue] = useState("");
   const [Duedate, setDuedate] = useState("Daue Date");
+
   const [Duedatevalue, setDuedatevalue] = useState("");
   const [Ponumber, setPonumber] = useState("PO Number");
   const [Ponumbervalue, setPonumbervalue] = useState("");
@@ -137,8 +146,15 @@ function InvoiceScree() {
   const [Totalvalue, setTotalvalue] = useState("");
 
   const [imageFile, setimageFile] = useState("");
+  const [border, setBorder] = useState(0);
+  const [border1, setBorder1] = useState(0);
+  const [border2, setBorder2] = useState(0);
+  const [border3, setBorder3] = useState(0);
+  const [border4, setBorder4] = useState(0);
+  const [border5, setBorder5] = useState(0);
+  const [border6, setBorder6] = useState(0);
 
-  console.log("imageFile------------->", imageFile);
+  console.log("border------------->", border);
 
   const [errorUpload, setErrorUpload] = useState("");
   const submitHandler = async (data) => {
@@ -226,7 +242,7 @@ function InvoiceScree() {
   };
 
   const onLoad = (fileString) => {
-    setimageFile(fileString)
+    setimageFile(fileString);
     console.log(fileString);
   };
 
@@ -299,6 +315,7 @@ function InvoiceScree() {
                   autoComplete="off"
                 >
                   <TextField
+                    size="small"
                     id="outlined-size-normal"
                     onChange={(e) => setInvoicefrom(e.target.value)}
                     placeholder="Who is this invoice from?(required)"
@@ -371,6 +388,7 @@ function InvoiceScree() {
                   >
                     <TextField
                       sx={{ mt: 0.9 }}
+                      size="small"
                       id="outlined-size-normal"
                       onChange={(e) => setInvoiceto(e.target.value)}
                       placeholder="Who is this invoice from?(required)"
@@ -386,6 +404,7 @@ function InvoiceScree() {
                   >
                     <TextField
                       sx={{ ml: 2, mt: 0.9 }}
+                      size="small"
                       id="outlined-size-normal"
                       onChange={(e) => setOptional(e.target.value)}
                       placeholder="(optional)"
@@ -416,6 +435,7 @@ function InvoiceScree() {
                           id="outlined-size-normal"
                           onChange={(e) => setInvoice(e.target.value)}
                           defaultValue="Invoice"
+                          size="small"
                         />
                       </Box>
                       <Box
@@ -470,15 +490,24 @@ function InvoiceScree() {
                         </div>
                         <Box
                           sx={{
-                            "& .MuiTextField-root": { m: 1, width: "12ch" },
+                            "& .MuiTextField-root": { m: 1, width: "15ch" },
                           }}
                           noValidate
                           autoComplete="off"
                         >
                           <TextField
+                            type="date"
                             size="small"
                             id="outlined-size-normal"
                             onChange={(e) => setDatevalue(e.target.value)}
+                            InputProps={{
+                              style: {
+                                border: "1px solid #C2C2C2",
+                                padding: 6,
+                                width: "15ch",
+                                height: 41,
+                              },
+                            }}
                           />
                         </Box>
                       </Box>
@@ -506,7 +535,7 @@ function InvoiceScree() {
                         </div>
                         <Box
                           sx={{
-                            "& .MuiTextField-root": { m: 1, width: "12ch" },
+                            "& .MuiTextField-root": { m: 1, width: "15ch" },
                           }}
                           noValidate
                           autoComplete="off"
@@ -534,7 +563,7 @@ function InvoiceScree() {
                           >
                             <TextField
                               id="outlined-size-normal"
-                              defaultValue="Daue Date"
+                              defaultValue="Due Date"
                               size="small"
                               onChange={(e) => setDuedate(e.target.value)}
                             />
@@ -542,12 +571,13 @@ function InvoiceScree() {
                         </div>
                         <Box
                           sx={{
-                            "& .MuiTextField-root": { m: 1, width: "12ch" },
+                            "& .MuiTextField-root": { m: 1, width: "15ch" },
                           }}
                           noValidate
                           autoComplete="off"
                         >
                           <TextField
+                            type="date"
                             size="small"
                             id="outlined-size-normal"
                             onChange={(e) => setDuedatevalue(e.target.value)}
@@ -578,7 +608,7 @@ function InvoiceScree() {
                         </div>
                         <Box
                           sx={{
-                            "& .MuiTextField-root": { m: 1, width: "12ch" },
+                            "& .MuiTextField-root": { m: 1, width: "15ch" },
                           }}
                           noValidate
                           autoComplete="off"
@@ -599,7 +629,7 @@ function InvoiceScree() {
               <input
                 style={{
                   width: "55ch",
-                  background: "black",
+                  background: "#336699",
                   boxSizing: "border-box",
 
                   borderRadius: "4px 0 0 0",
@@ -613,7 +643,7 @@ function InvoiceScree() {
               <input
                 style={{
                   width: "15ch",
-                  background: "black",
+                  background: "#336699",
                   boxSizing: "border-box",
 
                   backgroundPosition: "10px 10px",
@@ -621,12 +651,12 @@ function InvoiceScree() {
                   fontSize: "18px",
                 }}
                 onChange={(e) => setTableqty(e.target.value)}
-                defaultValue={"Quanty"}
+                defaultValue={"Quantity"}
               />
               <input
                 style={{
                   width: "15ch",
-                  background: "black",
+                  background: "#336699",
                   boxSizing: "border-box",
 
                   backgroundPosition: "10px 10px",
@@ -639,7 +669,7 @@ function InvoiceScree() {
               <input
                 style={{
                   width: "15ch",
-                  background: "black",
+                  background: "#336699",
                   boxSizing: "border-box",
                   borderRadius: "0 0 0 4px",
                   backgroundPosition: "10px 10px",
@@ -751,19 +781,23 @@ function InvoiceScree() {
             ) : (
               <> </>
             )}
-            <Button
-              variant="contained"
-              sx={{
-                color: "#fff!important",
-                backgroundColor: "#33CC99 !important",
-                width: 150,
-                height: "3em",
-              }}
-              startIcon={<AddIcon />}
-              onClick={handleappendupdate}
-            >
-              Line Item
-            </Button>
+            <Box sx={{ ml: 1 }}>
+              <Button
+                variant="contained"
+                className={style.Button}
+                sx={{
+                  color: "#fff!important",
+                  backgroundColor: "#33CC99 !important",
+                  width: 150,
+                  height: "3em",
+                }}
+                startIcon={<AddIcon />}
+                onClick={handleappendupdate}
+              >
+                Line Item
+              </Button>
+            </Box>
+
             <Box sx={{ mt: 5 }}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -790,6 +824,7 @@ function InvoiceScree() {
                       autoComplete="off"
                     >
                       <TextField
+                        size="small"
                         id="outlined-size-normal"
                         placeholder="Notes-any relevant information not alredy coverd"
                         onChange={(e) => setNoterelavent(e.target.value)}
@@ -819,6 +854,7 @@ function InvoiceScree() {
                       autoComplete="off"
                     >
                       <TextField
+                        size="small"
                         id="outlined-size-normal"
                         placeholder="Terms and conditions-late fees, payment methods,delivery 
                     schedule"
@@ -843,18 +879,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="subTotal"
-                          size="small"
-                          onChange={(e) => setSubTotal(e.target.value)}
-                        />
+                        {border6 === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="subTotal"
+                              size="small"
+                              // onChange={(e) => setSubTotal(e.target.value)}
+                              onClick={(e) => {
+                                setBorder6(1);
+                                setSubTotal(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="subTotal"
+                              size="small"
+                              // onChange={(e) => setSubTotal(e.target.value)}
+                              onClick={(e) => {
+                                setBorder6(1);
+                                setSubTotal(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <Box
@@ -899,18 +967,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Discount"
-                          size="small"
-                          onChange={(e) => setDiscount(e.target.value)}
-                        />
+                        {border5 === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Discount"
+                              size="small"
+                              // onChange={(e) => setDiscount(e.target.value)}
+                              onClick={(e) => {
+                                setBorder5(1);
+                                setDiscount(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Discount"
+                              size="small"
+                              // onChange={(e) => setDiscount(e.target.value)}
+                              onClick={(e) => {
+                                setBorder5(1);
+                                setDiscount(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <div dir="rtl">
@@ -957,18 +1057,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Tax"
-                          size="small"
-                          onChange={(e) => setTax(e.target.value)}
-                        />
+                        {border4 === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Tax"
+                              size="small"
+                              // onChange={(e) => setTax(e.target.value)}
+                              onClick={(e) => {
+                                setBorder4(1);
+                                setTax(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Tax"
+                              size="small"
+                              // onChange={(e) => setTax(e.target.value)}
+                              onClick={(e) => {
+                                setBorder4(1);
+                                setTax(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <div dir="rtl">
@@ -1015,18 +1147,52 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Shipping"
-                          size="small"
-                          onChange={(e) => setShipping(e.target.value)}
-                        />
+                        {border3 === 0 ? (
+                          <>
+                            {" "}
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Shipping"
+                              size="small"
+                              // onChange={(e) => setShipping(e.target.value)}
+                              onClick={(e) => {
+                                setBorder3(1);
+                                setShipping(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            {" "}
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Shipping"
+                              size="small"
+                              // onChange={(e) => setShipping(e.target.value)}
+                              onClick={(e) => {
+                                setBorder3(1);
+                                setShipping(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <div dir="rtl">
@@ -1073,18 +1239,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Total"
-                          size="small"
-                          onChange={(e) => setTotal(e.target.value)}
-                        />
+                        {border2 === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Total"
+                              size="small"
+                              // onChange={(e) => setTotal(e.target.value)}
+                              onClick={(e) => {
+                                setBorder2(1);
+                                setTotal(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Total"
+                              size="small"
+                              // onChange={(e) => setTotal(e.target.value)}
+                              onClick={(e) => {
+                                setBorder2(1);
+                                setTotal(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <Box
@@ -1129,18 +1327,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          inputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Amount Paid"
-                          size="small"
-                          onChange={(e) => setAmountpaid(e.target.value)}
-                        />
+                        {border1 === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              inputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Amount Paid"
+                              size="small"
+                              // onChange={(e) => setAmountpaid(e.target.value)}
+                              onClick={(e) => {
+                                setBorder1(1);
+                                setAmountpaid(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              inputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Amount Paid"
+                              size="small"
+                              // onChange={(e) => setAmountpaid(e.target.value)}
+                              onClick={(e) => {
+                                setBorder1(1);
+                                setAmountpaid(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <Box
@@ -1185,18 +1415,50 @@ function InvoiceScree() {
                         noValidate
                         autoComplete="off"
                       >
-                        <TextField
-                          InputProps={{
-                            style: {
-                              height: 33,
-                              padding: "0 14px",
-                            },
-                          }}
-                          id="outlined-size-normal"
-                          defaultValue="Balance Due"
-                          size="small"
-                          onChange={(e) => setBalencedue(e.target.value)}
-                        />
+                        {border === 0 ? (
+                          <>
+                            <TextField
+                              sx={{
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                              }}
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Balance Due"
+                              size="small"
+                              // onChange={(e) => setBalencedue(e.target.value)}
+                              onClick={(e) => {
+                                setBorder(1);
+                                setBalencedue(e.target.value);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <TextField
+                              InputProps={{
+                                style: {
+                                  height: 33,
+                                  padding: "0 14px",
+                                },
+                              }}
+                              id="outlined-size-normal"
+                              defaultValue="Balance Due"
+                              size="small"
+                              // onChange={(e) => setBalencedue(e.target.value)}
+                              onClick={(e) => {
+                                setBorder(1);
+                                setBalencedue(e.target.value);
+                              }}
+                            />
+                          </>
+                        )}
                       </Box>
                     </div>
                     <Box
@@ -1207,6 +1469,7 @@ function InvoiceScree() {
                           m: 1,
                           width: "15ch",
                           height: "5ch",
+                          marginBottom: 10,
                         },
                       }}
                       noValidate
@@ -1233,7 +1496,7 @@ function InvoiceScree() {
         </Card>
       </Box>
       <Box sx={{ ml: 5, mt: 5 }}>
-        <Box>
+        <Box sx={{ ml: 1 }}>
           <Button
             variant="contained"
             disabled
@@ -1247,7 +1510,7 @@ function InvoiceScree() {
             Send Invoice
           </Button>
         </Box>
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{ mt: 3, ml: 1 }}>
           {/* <PDFDownloadLink
                         document={<MyDocument product={invoicedeatail} />}
                         fileName="movielist.pdf"
@@ -1262,6 +1525,7 @@ function InvoiceScree() {
                     > Download Invoice</PDFDownloadLink> */}
           <Button
             variant="text"
+            className={style.Button}
             onClick={(e) => Download(e)}
             sx={{
               ":disabled": {
@@ -1278,7 +1542,12 @@ function InvoiceScree() {
           <Typography variant="p">Currency</Typography>
           <div>
             <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select native defaultValue="" id="grouped-native-select">
+              <Select
+                native
+                defaultValue=""
+                id="grouped-native-select"
+                size="small"
+              >
                 <optgroup label="Category 1">
                   <option value={1}>Option 1</option>
                   <option value={2}>Option 2</option>
@@ -1291,7 +1560,12 @@ function InvoiceScree() {
           <Typography variant="p">TYPE</Typography>
           <div>
             <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select native defaultValue="" id="grouped-native-select">
+              <Select
+                native
+                defaultValue=""
+                id="grouped-native-select"
+                size="small"
+              >
                 <option value={1}>Invoice</option>
                 <option value={2}>Credit Note</option>
                 <option value={1}>Quote</option>
@@ -1301,15 +1575,27 @@ function InvoiceScree() {
             </FormControl>
           </div>
         </Box>
-        <Button
-          type="submit"
-          variant="containd"
-          sx={{ backgroundColor: "blue", color: "#fff" }}
-        >
-          Save Draft
-        </Button>
-        <br></br>
-        <Button variant="containd">History</Button>
+        <Box sx={{ ml: 1 }}>
+          {" "}
+          <Button
+            type="submit"
+            variant="outlined"
+            className={style.Button}
+            sx={{ backgroundColor: "blue", color: "#fff" }}
+          >
+            Save Draft
+          </Button>
+          <br></br>
+          <Box sx={{ mt: 2 }}>
+            <Button
+              sx={{ color: "#fff", backgroundColor: "green" }}
+              className={style.Button}
+              variant="outlined"
+            >
+              History
+            </Button>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
