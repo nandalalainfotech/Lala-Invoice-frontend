@@ -21,7 +21,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { StyleSheet } from "@react-pdf/renderer";
 import Axios from "axios";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
@@ -76,13 +76,14 @@ const renderIcon = () => {
 };
 
 function InvoiceScree() {
-  const { handleSubmit, register, control } = useForm({
+  const { handleSubmit, register, setValue, control, getValues } = useForm({
     defaultValues: {
       test: [
         { Desc: "", qty: "", Rating: "", Amount: "" },
         { Desc: "", qty: "", Rating: "", Amount: "" },
       ],
     },
+    mode: "onChange"
   });
 
   const style = useStyle();
@@ -93,6 +94,11 @@ function InvoiceScree() {
     control,
     name: "test",
   });
+  const watchTest = useWatch({
+    control,
+    name: "test",
+  });
+
   const handleappendupdate = () => {
     append({});
   };
@@ -141,7 +147,7 @@ function InvoiceScree() {
   const [Tableqty, setTableqty] = useState("Quanty");
   const [TableRating, setTableRating] = useState("Rating");
   const [TableAmount, setTableAmount] = useState("Amount");
-  const [Subvalue, setSubvalue] = useState(10000);
+  const [Subvalue, setSubvalue] = useState("");
   const [duevalue, setBalenceduevalue] = useState(null);
   const [Totalvalue, setTotalvalue] = useState(null);
 
@@ -217,7 +223,6 @@ function InvoiceScree() {
   // const InvoiceList = useSelector((state) => state.InvoiceList);
   // const { invoicedeatail } = InvoiceList;
 
-  // console.log("invoicedeatail", invoicedeatail);
 
   const Download = () => {
     Axios.get(`/api/invoices/downloadALLPDF/`, {
@@ -262,7 +267,6 @@ function InvoiceScree() {
     setTotalvalue(calculate)
     setDisvalue(e.target.value)
     if (Paidvalue) {
-      // console.log("calculate,Paidvalue", calculate, Paidvalue)
       let bal = calculate - Paidvalue
       setBalenceduevalue(bal)
     }
@@ -310,13 +314,23 @@ function InvoiceScree() {
     }
 
   }
+
+  const handleChange = () => {
+    let subamount = 0
+    const arr = getValues().test.map((item) => {
+      item.Amount = item.qty && item.Rating ? parseInt(item.qty) * parseInt(item.Rating) : 0
+      subamount = subamount + item.Amount
+    })
+    setSubvalue(subamount)
+  }
   useEffect(() => {
     // dispatch(InvoiceListDetails());
     // const fetct = async () => {
     //     const { data } = await Axios.get(`/api/invoices/downloadCurrent/`);
-    //     console.log(data);
     // }
     // fetct()
+
+
   }, [])
 
   return (
@@ -324,6 +338,7 @@ function InvoiceScree() {
       sx={{ display: "flex" }}
       component="form"
       onSubmit={handleSubmit(submitHandler)}
+      onChange={handleChange}
     >
       <Box sx={{ maxWidth: 975, bgcolor: "#fff", Height: 875, ml: 3 }}>
         <Card variant="outlined">
@@ -806,16 +821,19 @@ function InvoiceScree() {
                           autoComplete="off"
                         >
                           <TextField
+                            value={getValues().test[index].Amount}
                             size="small"
                             name={`test.${index}.Amount`}
                             id="outlined-size-normal"
                             InputProps={{
+                              readOnly: true,
                               startAdornment: (
                                 <InputAdornment position="start">
                                   $
                                 </InputAdornment>
                               ),
                             }}
+
                             onChange={(e) => setAmount(e.target.value)}
                             {...register(`test.${index}.Amount`, {
                               required: false,
