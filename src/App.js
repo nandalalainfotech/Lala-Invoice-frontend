@@ -1,11 +1,12 @@
-import { Avatar, Grid, Typography } from "@material-ui/core";
+import { Avatar, Grid, Typography, makeStyles } from "@material-ui/core";
 import { AppBar, Button, Stack, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import InvoiceScree from "./screens/InvoiceScree";
-import MovieList from "./screens/MovieList";
-import { makeStyles } from "@material-ui/core";
+import Paper from '@mui/material/Paper';
+
 // import Footer from "./components/Footer";
+import BottomNavigation from "@mui/material/BottomNavigation";
 const useStyle = makeStyles({
   Headers: {
     color: "red",
@@ -39,7 +40,7 @@ function App() {
           <Toolbar>
             <Grid container spacing={3}>
               <Grid item xs={2}>
-                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "flex" } }}>
                   <Box sx={{ my: 2, color: "white", display: "block" }}>
                     <Stack direction="row">
                       <Avatar
@@ -73,13 +74,14 @@ function App() {
                 </Box>
               </Grid>
 
-              <Grid item xs={6}></Grid>
-              <Grid item xs={4}>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={6}>
                 <Box
                   sx={{
                     flexGrow: 1,
-                    display: { xs: "none", md: "flex" },
+                    display: { xs: "none", sm: "flex", md: "flex", lg: "flex" },
                     mt: 1,
+                    float: "right",
                   }}
                 >
                   <Button
@@ -109,42 +111,42 @@ function App() {
       <Box component="main" sx={{ mt: 12 }}>
         <Routes>
           <Route path="/" element={<InvoiceScree />} exact></Route>
-          <Route path="/list" element={<MovieList />} exact></Route>
         </Routes>
       </Box>
-      <Box component="footer" sx={{ display: "flex" }}>
-        <Box>
-          {" "}
-          <AppBar
-            // position="fixed"
-            style={{
-              zIndex: 999,
-              background: "#336699",
-              marginTop: "92vh",
-              height: 100,
-              bottom: 0,
-            }}
-          >
-            <Box sx={{ ml: 135, mt: 2 }}>
-              <Typography sx={{ ml: 100 }}> powered by</Typography>
-            </Box>
-            <Box sx={{ mt: -5 }}>
-              <span>
-                <img
-                  src="/image/nandl.png"
-                  style={{
-                    height: 50,
-                    width: 100,
-                    marginLeft: 1180,
-                    // marginTop: -10,
-                    // marginBottom: 100,
-                  }}
-                ></img>
-              </span>
-            </Box>
-          </AppBar>
-        </Box>
-      </Box>
+
+      <Paper
+        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+        elevation={3}
+      >
+        <BottomNavigation showLabels sx={{ background: "#336699" }}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  float: "right",
+                  flexGrow: 1,
+                  mb: 1,
+                  display: { xs: "flex", sm: "flex", md: "flex", lg: "flex" },
+                }}
+              >
+                <Box sx={{ my: 1, color: "#fff", display: "block", mr: 3 }}>
+                  <Typography> powered by</Typography>
+                </Box>
+                <Box sx={{ color: "#fff", display: "block", mr: 3 }}>
+                  <img
+                    src="/image/nandl.png"
+                    style={{
+                      height: 50,
+                      width: 100,
+                    }}
+                  ></img>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </BottomNavigation>
+      </Paper>
     </BrowserRouter>
   );
 }
