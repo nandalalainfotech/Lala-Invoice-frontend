@@ -1666,7 +1666,7 @@ function InvoiceScree() {
       </Box>
     </Box>
 
-    <Box
+     <Box
         sx={{ display: { xs: 'flex', sm: 'none',md: 'none',lg: 'none',xl: 'none' }, }}
         component="form"
         onSubmit={handleSubmit(submitHandler)}
@@ -2071,7 +2071,7 @@ function InvoiceScree() {
                   </Box>
                 </Typography>
 
-                <Typography>
+                {/* <Typography>
                   {fields ? (
                     <>
                       {fields.map(({ id }, index) => {
@@ -2187,7 +2187,7 @@ function InvoiceScree() {
                   ) : (
                     <> </>
                   )}
-                </Typography>
+                </Typography> */}
 
                 <Typography>
                   <Box sx={{ mt: 2 }}>
@@ -3029,7 +3029,7 @@ function InvoiceScree() {
             </CardContent>
           </Card>
         </Box>
-      </Box>
+      </Box> 
 
     </>
   );
